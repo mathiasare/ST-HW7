@@ -3,6 +3,7 @@ reload(helperClass)
 from helperClass import *
 import time
 import unittest
+import re
 
 class Folders(unittest.TestCase):
 
@@ -131,7 +132,7 @@ class Calculator(unittest.TestCase):
 
 class Abi(unittest.TestCase):
 
-    h = Helper("lab08-Homework")  # name of the jar
+    h = Helper("lab08-Homework")  #name of the jar
 
     def setUp(self):
         self.h.openSUT()
@@ -147,16 +148,63 @@ class Abi(unittest.TestCase):
 
         
 
-        
+class PinCode(unittest.TestCase):
 
+    h = Helper("lab08-Homework")  # name of the jar
+    
+    def setUp(self):
+        self.h.openSUT()
+        click("1618157994928.png")
+        time.sleep(0.2)
+    def tearDown(self):
+        self.h.closeSUT()
+
+    def test_pin_x(self):
+        numpad = find ("numpad.png")
+        tab =find ("1618158104773.png")
+        one = find("one.png")
+        two = find("1618156526764.png")
+        three = find("1618156552071.png")
+        four = find("1618156578926.png")
         
+        for j in  range(4):
+            click(one)
+            time.sleep(0.4)
+            self.assertEquals( j+1,len(tab.findAllList("1618158294890.png")))
+        click(one)
+        time.sleep(0.4)
+        self.assertEquals( 4,len(tab.findAllList("1618158294890.png")))
+    def test_pin_unlock(self):
+        numpad = find ("numpad.png")
+        tab =find ("1618158104773.png")
+        one = find("one.png")
+        two = find("1618156526764.png")
+        three = find("1618156552071.png")
+        four = find("1618156578926.png")
+        l = (one,two,three,four)
+
+        for key in  l:
+            click(key)  
+        time.sleep(0.5)
+         
+        s = tab.collectLinesText()[0]
+        m=re.search('Welcome, [A-Z][a-z]+!' ,s )   
+        self.assertTrue(m != None)
+
+    def test_pin_lock(self):
+        tab =find ("1618158104773.png")
+        one = find("one.png")
+        for j in range(4):
+            click(one)
+        self.assertTrue(exists("1618159666091.png"))
+       
 
 
         
 
      
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(Calculator)
+    suite = unittest.TestLoader().loadTestsFromTestCase(PinCode)
     unittest.TextTestRunner(verbosity=3).run(suite)
     #reporter = createReporter(NAME)
     #reporter.run(suite)
