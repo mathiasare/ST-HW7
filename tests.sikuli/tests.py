@@ -509,9 +509,12 @@ def findAllCatsInRegion(region):
 
         
 if __name__ == '__main__':
+    
 
-    suite = unittest.TestLoader().loadTestsFromTestCase(CatFlower)
+    suite = unittest.TestLoader().loadTestsFromModule(sys.modules[__name__])
+    reporter = createReporter("HW7")
+    reporter.run(suite)
 
-    unittest.TextTestRunner(verbosity=3).run(suite)
+    #unittest.TextTestRunner(verbosity=3).run(suite)
     #reporter = createReporter(NAME)
     #reporter.run(suite)
